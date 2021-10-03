@@ -6,12 +6,12 @@ public class MeleeAttackEnemy : Enemy
 {   
     public override void Attack()
     {
-        prejectial=Instantiate(prejectialPrefab, transform.position,Quaternion.identity);
+        projectile=Instantiate(projectilePrefab, transform.position,Quaternion.identity);
 
-        prejectial.GetComponent<Projectile>().damage =transform.GetComponent<Enemy>().damage;
-        prejectial.GetComponent<Projectile>().range = transform.GetComponent<Enemy>().attackRange;
-        prejectial.GetComponent<Projectile>().startPosition = transform.position;
-        prejectial.GetComponent<Projectile>().targetPosition = gameObject.GetComponent<Enemy>().player.transform.position;
+        projectile.GetComponent<Projectile>().damage =transform.GetComponent<Enemy>().damage;
+        projectile.GetComponent<Projectile>().range = transform.GetComponent<Enemy>().attackRange;
+        projectile.GetComponent<Projectile>().startPosition = transform.position;
+        projectile.GetComponent<Projectile>().targetPosition = gameObject.GetComponent<Enemy>().player.transform.position;
         base.Attack();
     } 
 }

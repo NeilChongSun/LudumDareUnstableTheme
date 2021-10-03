@@ -20,8 +20,8 @@ public abstract class Enemy : MonoBehaviour
     private Coroutine updateAttackCoroutine;
     private Coroutine animationTimerCoroutine;
 
-    protected GameObject prejectial;
-    public GameObject prejectialPrefab;
+    protected GameObject projectile;
+    public GameObject projectilePrefab;
     public GameObject player;
     private CircleCollider2D attackRangeCollider;
     private Rigidbody2D rb2D;

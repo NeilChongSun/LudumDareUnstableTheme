@@ -141,7 +141,7 @@ MonoBehaviour:
   attackRange: 1.62
   attackInternal: 2
   attackAnimationInternal: 0.4
-  prejectialPrefab: {fileID: 4325984819470520415, guid: 4250492479fb69a48944d5bbd21d8dae, type: 3}
+  projectilePrefab: {fileID: 4325984819470520415, guid: f4ac71f48efedcb44b009dc87eb90e0f, type: 3}
   player: {fileID: 7734178970607736880, guid: 6881a0df5adeafd47b2a4d77ed8563ec, type: 3}
 --- !u!95 &751366704968048823
 Animator:

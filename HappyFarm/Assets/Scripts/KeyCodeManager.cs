@@ -4,7 +4,6 @@ public class KeyCodeManager : MonoBehaviour
 {
     public static KeyCodeManager instance = null;
 
-
     public KeyCodeSet currentKeyCodeSet;
     public KeyCodeSet[] normalKeyCodeSets;
     public KeyCodeSet[] hardCodeSets;
@@ -14,16 +13,11 @@ public class KeyCodeManager : MonoBehaviour
     public int hardPercentage = 0;
     private int normalPercentage = 100;
 
-    public int switchKeyCodeSetInternal = 10;
-
-    private int timer;
-
     private void Awake()
     {
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
-
         }
         else
         {
@@ -31,33 +25,12 @@ public class KeyCodeManager : MonoBehaviour
         }
     }
 
-
     private void Start()
     {
-        normalPercentage = 100 - hardPercentage;
-        timer = switchKeyCodeSetInternal;
-        StartCoroutine(SwitchKeyCodeTimer());
+        normalPercentage = 100 - hardPercentage;       
     }
 
-    private void Update()
-    {
-        if (timer <= 0)
-        {
-            RandomKeyCodeSet();
-            timer = switchKeyCodeSetInternal;
-        }
-    }
-
-    private IEnumerator SwitchKeyCodeTimer()
-    {
-        while (true)
-        {
-            --timer;
-            yield return new WaitForSeconds(1);
-        }
-    }
-
-    private void RandomKeyCodeSet()
+    public void RandomKeyCodeSet()
     {
         if (Random.Range(0, 100) >= hardPercentage)
         {

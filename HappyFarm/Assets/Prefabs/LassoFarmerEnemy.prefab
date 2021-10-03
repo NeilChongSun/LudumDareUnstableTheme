@@ -122,7 +122,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.61
+  m_Radius: 4.68
 --- !u!95 &3591199095360736837
 Animator:
   serializedVersion: 3
@@ -160,5 +160,5 @@ MonoBehaviour:
   attackRange: 4.69
   attackInternal: 2
   attackAnimationInternal: 0.8
-  prejectialPrefab: {fileID: 4325984819470520415, guid: 4250492479fb69a48944d5bbd21d8dae, type: 3}
+  projectilePrefab: {fileID: 4325984819470520415, guid: 4250492479fb69a48944d5bbd21d8dae, type: 3}
   player: {fileID: 7734178970607736880, guid: 6881a0df5adeafd47b2a4d77ed8563ec, type: 3}

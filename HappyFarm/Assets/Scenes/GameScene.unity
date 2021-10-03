@@ -404,8 +404,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e2db10f587667774795f0f45f545a059, type: 2}
   - {fileID: 11400000, guid: ceb752ef2a09a824fb5bb9993e142f1a, type: 2}
   - {fileID: 11400000, guid: d7ac987b934489e4abed2b6bdef938e4, type: 2}
-  hardPercentage: 63
-  switchKeyCodeSetInternal: 999
+  hardPercentage: 8
 --- !u!4 &1562362713
 Transform:
   m_ObjectHideFlags: 0
@@ -446,6 +445,14 @@ MonoBehaviour:
   - {fileID: 748569123}
   - {fileID: 671232529}
   gameStage: 0
+  stageInformations:
+  - {fileID: 11400000, guid: d700e72ac66ae9743aaf1bc5128e4cb5, type: 2}
+  - {fileID: 11400000, guid: c72dfb0013f91584088fe54da0ccd03b, type: 2}
+  - {fileID: 11400000, guid: 2cec98a2d7b86cc48b0faa1285cc9012, type: 2}
+  - {fileID: 11400000, guid: d80174a630de54d4a84935aaf3a14cfb, type: 2}
+  - {fileID: 11400000, guid: d647284f38606a94cafdcab6a706f95d, type: 2}
+  - {fileID: 11400000, guid: a545fb415aea53c4992c24aa6c9c659a, type: 2}
+  - {fileID: 11400000, guid: b5c906b014f9e5c4a9cb73233ff2bf27, type: 2}
   gameTime: 0
 --- !u!1 &1741837313
 GameObject:

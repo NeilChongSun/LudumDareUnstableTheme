@@ -5,7 +5,7 @@ public class GameManger : MonoBehaviour
 {
     public enum GameStage
     {
-        BREAK = 0,
+        NULL = 0,
         ONE, // 1 
         TWO, // 2 
         THREE, //3
@@ -20,18 +20,24 @@ public class GameManger : MonoBehaviour
 
     public GameObject[] enemyPrefabs;
     public GameObject playerPrefab;
+    
     [HideInInspector]
     public GameObject player;
+    
     public Transform[] enemySpawnPoints;
+    
     public GameStage gameStage;
 
+    public StageInformation[] stageInformations;
+    private StageInformation currentStageInformation;
+    
     public int gameTime;
-    private int timer;
     private bool isLast = false;
 
     private Coroutine timeCounterCoroutine = null;
     private Coroutine switchStateCoroutine = null;
     private Coroutine spawnEnemyCoroutine = null;
+    private Coroutine breakTimeCountDownCoroutine = null;
 
     private void Awake()
     {
@@ -56,7 +62,10 @@ public class GameManger : MonoBehaviour
 
     private void Update()
     {
+        currentStageInformation = stageInformations[(int)gameStage - 1];
+
         UpdateState();
+
         if (Input.GetKeyDown(KeyCode.Keypad0))
         {
             SwitchStageDirectly();
@@ -65,111 +74,18 @@ public class GameManger : MonoBehaviour
 
     private void UpdateState()
     {
-        //switch (gameState)
-        //{
-        //    case GameState.BREAK:
-        //        break;
-        //    case GameState.ONE:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(1, 5, 1));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(5));
-        //        break;
-        //    case GameState.TWO:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(15, 30, 2));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(30));
-        //        break;
-        //    case GameState.THREE:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(20, 40, 3));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(40));
-        //        break;
-        //    case GameState.FOUR:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(28, 45, 3));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(45));
-        //        break;
-        //    case GameState.FIVE:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(30, 50, 4));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(50));
-        //        break;
-        //    case GameState.SIX:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(35, 55, 4));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(55));
-        //        break;
-        //    case GameState.SEVEN:
-        //        if (spawnEnemyCoroutine == null)
-        //            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(40, 65, 5));
-        //        if (switchStateCoroutine == null)
-        //            switchStateCoroutine = StartCoroutine(SwitchState(65));
-        //        break;
-        //    case GameState.LAST:
-        //        isLast = true;
-        //        break;
-        //    default:
-        //        break;
-        //}
-        switch (gameStage)
+        if (spawnEnemyCoroutine == null)
         {
-            case GameStage.BREAK:
-                break;
-            case GameStage.ONE:
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(1, 5, 1));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(5));
-                break;
-            case GameStage.TWO:
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(1, 3, 2));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(3));
-                break;
-            case GameStage.THREE:
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(2, 4, 3));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(4));
-                break;
-            case GameStage.FOUR:
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(2, 4, 3));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(4));
-                break;
-            case GameStage.FIVE:
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(3, 5, 4));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(5));
-                break;
-            case GameStage.SIX:
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(3, 5, 4));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(5));
-                break;
-            case GameStage.SEVEN:
-                if (!isLast)
-                    isLast = true;
-                if (spawnEnemyCoroutine == null)
-                    spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(4, 6, 5));
-                if (switchStateCoroutine == null)
-                    switchStateCoroutine = StartCoroutine(SwitchStage(6));
-                break;
-            case GameStage.LAST:
-                isLast = true;
-                break;
-            default:
-                break;
+            print(gameStage + "start");
+            spawnEnemyCoroutine = StartCoroutine(SpwanEnemy(currentStageInformation));
+        }
+
+        if (switchStateCoroutine == null)
+            switchStateCoroutine = StartCoroutine(StageCountDown(currentStageInformation.stageTime));
+
+        if (gameStage == GameStage.SEVEN && !isLast)
+        {
+            isLast = true;
         }
     }
     private void SpawnPlayer()
@@ -179,29 +95,26 @@ public class GameManger : MonoBehaviour
 
     private void ShowMessage()
     {
-
+        print("Stage: " + gameStage + "Done, this 10 sec break time");
     }
 
-    private IEnumerator SpwanEnemy(float count, float time, int max)
+    private IEnumerator SpwanEnemy(StageInformation info)
     {
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < info.enemyCount; i++)
         {
-            int index = Random.Range(0, max);
-            if (index >= enemyPrefabs.Length)
-            {
-                index = enemyPrefabs.Length - 1;
-            }
+            int index = Random.Range(0, info.enemyPrefabs.Length);
+
             GameObject enemy = Instantiate(enemyPrefabs[index], enemySpawnPoints[Random.Range(0, 6)].position, Quaternion.identity);
             if (player != null)
             {
                 enemy.GetComponent<Enemy>().player = player;
             }
-            yield return new WaitForSeconds(time / count);
+            yield return new WaitForSeconds(info.stageTime / info.enemyCount);
         }
     }
-
-    private IEnumerator BreakTime()
+    private IEnumerator BreakTimeCountDown()
     {
+        //KeyCodeManager.instance.RandomKeyCodeSet();
         ShowMessage();
         yield return new WaitForSeconds(10);
         if (!isLast)
@@ -212,6 +125,17 @@ public class GameManger : MonoBehaviour
         {
             gameStage = (GameStage)Random.Range(1, (int)GameStage.LAST);
         }
+        if (spawnEnemyCoroutine != null)
+        {
+            StopCoroutine(spawnEnemyCoroutine);
+            spawnEnemyCoroutine = null;
+        }
+        if (switchStateCoroutine != null)
+        {
+            StopCoroutine(switchStateCoroutine);
+            switchStateCoroutine = null;
+        }
+        breakTimeCountDownCoroutine = null;
         yield break;
     }
 
@@ -220,32 +144,24 @@ public class GameManger : MonoBehaviour
         if (switchStateCoroutine != null)
         {
             StopCoroutine(switchStateCoroutine);
-            switchStateCoroutine = null;
         }
-
         if (spawnEnemyCoroutine != null)
         {
             StopCoroutine(spawnEnemyCoroutine);
-            spawnEnemyCoroutine = null;
         }
-        StartCoroutine(BreakTime());
-        if (switchStateCoroutine != null)
+        if (breakTimeCountDownCoroutine == null)
         {
-            StopCoroutine(switchStateCoroutine);
-            switchStateCoroutine = null;
+            breakTimeCountDownCoroutine = StartCoroutine(BreakTimeCountDown());
         }
     }
 
-    private IEnumerator SwitchStage(int time)
+    private IEnumerator StageCountDown(int time)
     {
         yield return new WaitForSeconds(time);
-        if (spawnEnemyCoroutine != null)
+        if (breakTimeCountDownCoroutine == null)
         {
-            StopCoroutine(spawnEnemyCoroutine);
-            spawnEnemyCoroutine = null;
+            breakTimeCountDownCoroutine = StartCoroutine(BreakTimeCountDown());
         }
-        StartCoroutine(BreakTime());
-        switchStateCoroutine = null;
         yield break;
     }
     private IEnumerator TimeCounter()
