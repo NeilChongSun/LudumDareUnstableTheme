@@ -6,55 +6,70 @@ public abstract class Enemy : MonoBehaviour
 {
     public float movementSpeed;
     public int maxHP;
-    public int currentHP;
+    private int currentHP;
     public int damage;
     public float attackRange;
-    public float attactInternal;
-    public float attackAnimatingTime;
 
-    public GameObject player;
+    public float attackInternal;
+    public float attackAnimationInternal;
 
-    private CircleCollider2D attackRangeCollider;
+    private bool isInRange = false;
+    private bool isAttadcking = false;
 
-    private Rigidbody2D rb2D;
-    private float timer;
-    private bool isAttacking = false;
     private Coroutine seekCoroutine;
-    private Coroutine attackingCoroutine;
+    private Coroutine updateAttackCoroutine;
+    private Coroutine animationTimerCoroutine;
 
+    protected GameObject prejectial;
+    public GameObject prejectialPrefab;
+    public GameObject player;
+    private CircleCollider2D attackRangeCollider;
+    private Rigidbody2D rb2D;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     private void OnEnable()
     {
-        rb2D = GetComponent<Rigidbody2D>();
-        attackRangeCollider = GetComponent<CircleCollider2D>();
-
-        currentHP = maxHP;
-        timer = attactInternal;
-
-        seekCoroutine = StartCoroutine(Seek());
-    }
-
-    private void Update()
-    {
-        if (timer <= 0)
-        {
-            isAttacking = true;
-            Attack();
-            if (attackAnimatingTime <= 0)
-            {
-                isAttacking = false;
-            }
-            timer = attactInternal;
-        }
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb2D = GetComponentInChildren<Rigidbody2D>();
+        attackRangeCollider = GetComponentInChildren<CircleCollider2D>();
+        animator = GetComponentInChildren<Animator>();
         attackRangeCollider.radius = attackRange;
+        currentHP = maxHP;
+        seekCoroutine = StartCoroutine(Seek());
     }
 
     private void FixedUpdate()
     {
-        if (!isAttacking)
+        if (isInRange && !isAttadcking)
         {
+
             MoveToPlayer();
+            if (animationTimerCoroutine != null)
+            {
+                StopCoroutine(animationTimerCoroutine);
+            }
+        }
+
+        if (player.transform.position.x-rb2D.position.x>0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
+    }
+
+    private void Update()
+    {
+        if (isAttadcking)
+        {
+            animator.SetInteger("AnimationState", 1);
+        }
+        else
+        {
+            animator.SetInteger("AnimationState", 0);
         }
     }
 
@@ -62,9 +77,23 @@ public abstract class Enemy : MonoBehaviour
     {
         Vector2 newPostion = Vector2.MoveTowards(rb2D.position, player.transform.position, movementSpeed * Time.deltaTime);
         rb2D.MovePosition(newPostion);
+
     }
 
-    abstract public void Attack();
+    virtual public void Attack()
+    {
+        isAttadcking = true;
+        animationTimerCoroutine = StartCoroutine(AnimationTimer());
+    }
+
+    private IEnumerator UpdateAttack()
+    {
+        while (true)
+        {
+            Attack();
+            yield return new WaitForSeconds(attackInternal);
+        }
+    }
 
     private IEnumerator Seek()
     {
@@ -75,34 +104,40 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    //Player is in attack range, prepare to attack player.
-    private IEnumerator Attacking()
+    //Timer for attack animation, enemy stop moving
+    private IEnumerator AnimationTimer()
     {
         while (true)
         {
-            timer--;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(attackAnimationInternal);
+            isAttadcking = false; 
         }
     }
 
-    private IEnumerator AttackRemainTimer()
+    public void DamageEnemy(int damage)
     {
-        while (isAttacking)
+        currentHP -= damage;
+        if (currentHP <= 0)
         {
-            attackAnimatingTime--;
-            yield return new WaitForSeconds(attackAnimatingTime);
+            KillEnemy();
         }
+    }
+
+    private void KillEnemy()
+    {
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
+            isInRange = true;
             if (seekCoroutine != null)
             {
                 StopCoroutine(seekCoroutine);
             }
-            attackingCoroutine = StartCoroutine(Attacking());
+            updateAttackCoroutine = StartCoroutine(UpdateAttack());
         }
     }
 
@@ -110,11 +145,20 @@ public abstract class Enemy : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            if (attackingCoroutine != null)
+            isInRange = false;
+
+            if (updateAttackCoroutine != null)
             {
-                StopCoroutine(attackingCoroutine);
+                StopCoroutine(updateAttackCoroutine);
             }
-            seekCoroutine= StartCoroutine(Seek());
+
+            if (isAttadcking && animationTimerCoroutine != null)
+            {
+                StopCoroutine(animationTimerCoroutine);
+                isAttadcking = false;
+            }
+            seekCoroutine = StartCoroutine(Seek());
+
         }
     }
 

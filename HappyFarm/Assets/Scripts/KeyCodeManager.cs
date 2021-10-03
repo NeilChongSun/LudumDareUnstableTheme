@@ -35,7 +35,6 @@ public class KeyCodeManager : MonoBehaviour
     private void Start()
     {
         normalPercentage = 100 - hardPercentage;
-        //print("current:" + currentKeyCodeSet.name.ToString());
         timer = switchKeyCodeSetInternal;
         StartCoroutine(SwitchKeyCodeTimer());
     }
@@ -45,7 +44,6 @@ public class KeyCodeManager : MonoBehaviour
         if (timer <= 0)
         {
             RandomKeyCodeSet();
-            //print("current:" + currentKeyCodeSet.name.ToString());
             timer = switchKeyCodeSetInternal;
         }
     }
